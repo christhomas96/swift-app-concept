@@ -56,6 +56,10 @@ a{color:inherit}
 .dot{position:absolute;top:8px;right:8px;width:10px;height:10px;border-radius:50%;background:var(--pink);border:2px solid var(--card)}
 .ic{width:1.35em;height:1.35em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .top .ic{width:24px;height:24px}
+.logout{flex:none;display:inline-flex;align-items:center;gap:4px;height:44px;padding:0 8px;border-radius:12px;font-size:14px;font-weight:700;line-height:1.1;letter-spacing:0;word-spacing:0;white-space:nowrap}
+.logout:hover{background:var(--soft)}
+.logout .ic{width:20px;height:20px}
+.homebtn{display:block;border-radius:8px}
 .aa{font-weight:700;font-size:20px;letter-spacing:0;word-spacing:0}
 .view{flex:1;min-height:0;overflow-y:auto;padding:16px 16px 28px;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
 .tabs{flex:none;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--card);border-top:1px solid var(--line);padding:6px 6px 12px}
@@ -210,7 +214,7 @@ tr:last-child td{border:0}
   <aside class="side">
     <div class="logo" id="sideLogo"></div>
     <h1>A family app concept for Swift School</h1>
-    <p>One calm front door for school life, built around how Swift families read and listen.</p>
+    <p>One place for school life, easy to read and hear.</p>
     <div class="about" id="sideAbout"></div>
   </aside>
   <div class="phone">
@@ -261,6 +265,7 @@ screen:'<rect x="4" y="5" width="16" height="11" rx="1.500"/><path d="M2.500 19.
 bag:'<path d="M5 8h14l1 12.500H4zM9 10V6.500a3 3 0 0 1 6 0V10"/>',
 door:'<path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M3.500 21h17M14.500 12h.01"/>',
 form:'<path d="M6 3h9l4 4v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM15 3v4h4M8.500 12h7M8.500 16h7"/>',
+logout:'<path d="M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5M15 8l4 4-4 4M19 12H9"/>',
 users:'<circle cx="9" cy="8" r="3.500"/><path d="M2.500 20c.5-3.500 3-5.500 6.500-5.500s6 2 6.500 5.500M16 4.800a3.500 3.500 0 0 1 0 6.400M18 14.800c2 .7 3.200 2.400 3.500 5.200"/>'
 };
 const I=(n,c='')=>`<svg class="ic ${c}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]}</svg>`;
@@ -273,8 +278,8 @@ const WEEK=[
  {d:'Mon',n:2,name:'Monday, November 2',type:'Regular school day'},
  {d:'Tue',n:3,name:'Tuesday, November 3',type:'Regular school day'},
  {d:'Wed',n:4,name:'Wednesday, November 4',type:'Late start Wednesday',late:true},
- {d:'Thu',n:5,name:'Thursday, November 5',type:'Regular school day',note:'The Star Report comes out today.'},
- {d:'Fri',n:6,name:'Friday, November 6',type:'Regular school day',note:'Fall photo retakes are today.',fri:true}
+ {d:'Thu',n:5,name:'Thursday, November 5',type:'Regular school day',note:''},
+ {d:'Fri',n:6,name:'Friday, November 6',type:'Regular school day',note:'Photo retakes today.',fri:true}
 ];
 const EVENTS=[
  {id:'photo',title:'Fall photo retakes',start:'2026-11-06',time:'All day',cat:'family',place:'Swift School'},
@@ -286,63 +291,43 @@ const EVENTS=[
 const CATS={family:'School life',off:'No school',admissions:'Admissions'};
 const NL={star:'Star Report',lower:'Lower Division',middle:'Middle Division',inst:'Swift Institute'};
 const ISSUES=[
- {id:'star-1105',kind:'star',date:'2026-11-05',title:'Star Report: November 5',mins:3,fresh:true,
-  short:['Photo retakes are tomorrow.','The Reptile Man visits next Thursday.','School is closed November 23 to 27.'],
-  todo:[{t:'Get ready for photo retakes on Friday, November 6',ev:'photo'},{t:'Make your Swift Fund pledge by December 31'}],
-  body:[['This week at Swift','Fall individual photo retakes are on Friday. If your child missed picture day, or you would like a new photo, this is the day.','Lower Division folders go home on Friday, as usual.'],
-        ['Looking ahead','The Reptile Man visits on Thursday, November 12. It is an all-day visit at school.','Swift 101 is on Tuesday, November 17 at 8:30 AM. If you know a family who is curious about Swift, please send them our way.','Thanksgiving break runs from November 23 to 27. School is closed all week.'],
-        ['Save the date','The next Swift Parent Connection meeting is on Friday, December 4 at 8:00 AM in the Dining Hall.']]},
- {id:'lower-1030',kind:'lower',date:'2026-10-30',title:'Lower Division note: inside the Friday folder',mins:2,
-  short:['Check the Friday folder this weekend.','Spirit wear is fine on Fridays.','Grades 1 to 3 use school iPads.'],todo:[{t:'Look through the Friday folder'}],
-  body:[['This week','Friday folders went home today. Please look through them together this weekend.','Students may wear approved spirit wear on Fridays.'],['A note on tech','Students in grades 1 to 3 use school iPads. Grades 4 and 5 are moving over to school Chromebooks.']]},
- {id:'star-1029',kind:'star',date:'2026-10-29',title:'Star Report: October 29',mins:3,
-  short:['Photo retakes are on November 6.','Swift 101 is on November 17.','Report cards are in FACTS.'],todo:[],
-  body:[['This week at Swift','This sample issue shows how an older Star Report stays easy to find, listen to, and search.'],['Reminders','Report cards and school forms live in the FACTS Family Portal.']]},
- {id:'middle-1028',kind:'middle',date:'2026-10-28',title:'Middle Division note: Chromebooks and PE',mins:2,
-  short:['Bring a charged Chromebook each day.','Check the PE clothing rules.','Students can earn out-of-uniform days.'],todo:[],
-  body:[['Be ready','Students in grades 6 to 8 bring their own Chromebook. Please charge it each night.'],['PE clothes','PE shirts are solid blue, white, or gray. Shorts and joggers are black, navy, or gray.']]},
- {id:'inst-1026',kind:'inst',date:'2026-10-26',title:'Swift Institute: November learning',mins:2,
-  short:['Webinar on teaching kids about body safety.','Workshops and webinars are free.','Orton-Gillingham course inquiries are open.'],todo:[],
-  body:[['Coming up','Traci Hurley, CFLE, of CHOA leads a virtual session called Teaching Kids About Body Safety.'],['For educators','Swift offers Classroom Educator, Associate, and Certified Level Orton-Gillingham courses.']]},
- {id:'star-1022',kind:'star',date:'2026-10-22',title:'Star Report: October 22',mins:3,
-  short:['Parenting talk today with Rob Evans.','Aftercare is free during the talk.','Swift 101 runs again on November 17.'],todo:[],
-  body:[['Today','Rob Evans, Ed.D., speaks on Parenting with Less Stress and More Joy from 2:45 to 3:30 PM. Swift students can attend aftercare free during the talk.']]}
+ {id:'star-1105',kind:'star',date:'2026-11-05',title:'Star Report: November 5',fresh:true,
+  short:['Photo retakes are tomorrow.','Reptile Man visits November 12.','School is closed November 23 to 27.'],
+  todo:[{t:'Photo retakes on Friday',ev:'photo'},{t:'Swift Fund pledge by December 31'}],
+  body:[['Save the date','Swift Parent Connection meeting: December 4, 8:00 AM, Dining Hall.']]},
+ {id:'lower-1030',kind:'lower',date:'2026-10-30',title:'Lower Division: Friday folder',
+  short:['Check the Friday folder.','Spirit wear is fine on Fridays.'],todo:[],body:[]},
+ {id:'star-1029',kind:'star',date:'2026-10-29',title:'Star Report: October 29',
+  short:['Photo retakes are November 6.','Swift 101 is November 17.'],todo:[],body:[]},
+ {id:'middle-1028',kind:'middle',date:'2026-10-28',title:'Middle Division: Chromebooks and PE',
+  short:['Bring a charged Chromebook.','PE shirts: solid blue, white, or gray.'],todo:[],body:[]},
+ {id:'inst-1026',kind:'inst',date:'2026-10-26',title:'Swift Institute: November',
+  short:['Webinar: Teaching Kids About Body Safety.','Workshops and webinars are free.'],todo:[],body:[]}
 ];
 const TOPICS=[
- {id:'sick',title:'My child is sick or needs medicine',icon:'pill',kw:'nurse health medication allergy',d:'Nurses, forms, and medicine rules',
-  body:['The school nurses are Laura Vandegrift and Kathryn Howell.','Prescription medicine stays in its original pharmacy container. You sign a permission form for each one.','Over-the-counter permission is set in FACTS.','Hand all medicine to an adult at morning carpool or to the receptionist. It never goes in a backpack.'],
-  contact:'School nurse, ext. 204'},
- {id:'carpool',title:'Carpool and pickup',icon:'car',kw:'dismissal late early pikmykid drop off',d:'Times, numbers, and PikMyKid',
-  body:['Carpool opens at 7:30 AM. Homeroom starts at 8:00 AM.','On Wednesdays, carpool is at 8:30 AM and homeroom is at 9:00 AM.','Dismissal is at 3:05 PM. On half days it is 12:15 PM.','Early pickup must be before 2:30 PM.','Carpool numbers come from PikMyKid. Change them in that app or by phone.'],
-  app:'pik',contact:'Front desk'},
- {id:'after',title:'Aftercare and clubs',icon:'clock',kw:'above beyond morning care drop in',d:'3:10 to 5:30 PM, plus Above & Beyond clubs',
-  body:['Aftercare runs from 3:10 to 5:30 PM for all students.','A drop-in after 3:30 PM costs $25, billed through FACTS.','Wednesday morning care is free and starts at 7:30 AM. Park and walk your child in.','Sign up for aftercare and Above & Beyond clubs in the mySwift Parent Portal.'],
-  app:'my',contact:'Auxiliary programs'},
- {id:'lunch',title:'Lunch and snacks',icon:'food',kw:'menu allergy food tasty touch',d:'Included in tuition',
-  body:['Lunch is included in tuition and comes from A Tasty Touch.','Sandwiches and a salad bar are always options. You can also pack lunch.','Fast food is not allowed.','Snacks should be nutritious. No soft drinks, candy, gum, cakes, or chips.'],contact:'Food allergy contact'},
- {id:'uniform',title:'Uniforms and spirit wear',icon:'shirt',kw:'dress lands end pe',d:"Lands' End, Fridays, and PE",
-  body:["Order uniforms through Lands' End.",'Lower Division students may wear approved spirit wear on Fridays.','Middle Division PE shirts are solid blue, white, or gray. Shorts and joggers are black, navy, or gray.','Middle Division students can earn out-of-uniform days.'],contact:'Front desk'},
- {id:'forms',title:'Report cards and forms',icon:'form',kw:'facts enrollment release demographic',d:'All in the FACTS Family Portal',
-  body:['Report cards, enrollment packets, release forms, and contact changes are in FACTS.','Texts and emails from school also come through FACTS.'],app:'facts',contact:'Registrar'},
- {id:'services',title:'Speech, OT, and counseling',icon:'users',kw:'therapy occupational psychologist reading paws',d:'In-house support, included in tuition',
-  body:['Speech and language pathologists help students build communication skills.','Occupational therapists support motor skills.','School psychologists support resilience and well-being.','READing PAWS uses therapy animals to build literacy confidence.'],contact:'Counseling team'},
- {id:'tech',title:'iPads and Chromebooks',icon:'screen',kw:'technology device laptop',d:'Which device for which grade',
-  body:['Grades 1 to 3 use school iPads.','Grades 4 and 5 use school Chromebooks.','Grades 6 to 8 bring their own Chromebook.'],contact:'Front desk'},
- {id:'supplies',title:'School supplies',icon:'bag',kw:'kit 1st day',d:'Kits ship straight to school',
-  body:['Order kits from 1st Day School Supplies. They ship directly to Swift School.','Grade-by-grade lists are in the family resources page.'],contact:'Front desk'},
- {id:'sb10',title:'Georgia Special Needs Scholarship',icon:'wallet',kw:'sb10 iep 504 money',d:'Eligibility and check dates',
-  body:['This is for students who attended a Georgia public school with an IEP or 504 Plan on file.','Check your amount with the state calculator, then send it to Ellen Ascher.','Checks come in October, December, February, and May. A parent endorses each one at school.'],contact:'Ellen Ascher, ext. 216'}
+ {id:'sick',title:'Sick or needs medicine',icon:'pill',kw:'nurse health medication allergy',
+  body:['Medicine stays in its original container.','Hand it to an adult. Never in a backpack.','Set over-the-counter permission in FACTS.'],contact:'School nurse, ext. 204'},
+ {id:'carpool',title:'Carpool and pickup',icon:'car',kw:'dismissal late early pikmykid drop off',
+  body:['Carpool opens at 7:30 AM. Wednesdays: 8:30 AM.','Dismissal is at 3:05 PM. Half days: 12:15 PM.','Early pickup must be before 2:30 PM.'],app:'pik',contact:'Front desk'},
+ {id:'after',title:'Aftercare and clubs',icon:'clock',kw:'above beyond morning care drop in',
+  body:['Aftercare runs from 3:10 to 5:30 PM.','Drop-in after 3:30 PM: $25.','Sign up in mySwift.'],app:'my',contact:'Auxiliary programs'},
+ {id:'lunch',title:'Lunch and snacks',icon:'food',kw:'menu allergy food tasty touch',
+  body:['Lunch is included in tuition.','You can also pack lunch. No fast food.','No soda, candy, gum, cake, or chips.'],contact:'Food allergy contact'},
+ {id:'uniform',title:'Uniforms',icon:'shirt',kw:'dress lands end pe spirit',
+  body:["Order from Lands' End.",'Lower Division: spirit wear on Fridays.','Middle Division can earn out-of-uniform days.'],contact:'Front desk'},
+ {id:'forms',title:'Report cards and forms',icon:'form',kw:'facts enrollment release demographic',
+  body:['Report cards and forms are in FACTS.'],app:'facts',contact:'Registrar'}
 ];
 const APPS={
- pik:{name:'PikMyKid',icon:'car',d:'Carpool numbers and dismissal'},
- facts:{name:'FACTS Family Portal',icon:'form',d:'Report cards, billing, and forms'},
- my:{name:'mySwift Parent Portal',icon:'door',d:'Aftercare and club sign-up'}
+ pik:{name:'PikMyKid',icon:'car'},
+ facts:{name:'FACTS Family Portal',icon:'form'},
+ my:{name:'mySwift Parent Portal',icon:'door'}
 };
 const PAST=[
- ['Focus, Feelings, & Frustration','Tools for supporting children with dyslexia, ADHD, and anxiety at home','Brennan Chandler, PhD'],
- ['Making Learning Click','How multisensory instruction helps your child thrive','Jocelyn Gasaway, F-OGA, and Natalie Felix, F-OGA'],
- ['Practice Makes Better','A guide to supporting executive functioning development','Tatiana Matthews, LPC, CRC'],
- ['Keeping Children Safe in a Digital World','A session for parents','Traci Hurley, CFLE, CHOA']
+ ['Focus, Feelings, & Frustration','Brennan Chandler, PhD'],
+ ['Making Learning Click','Jocelyn Gasaway and Natalie Felix'],
+ ['Practice Makes Better','Tatiana Matthews, LPC, CRC'],
+ ['Keeping Children Safe in a Digital World','Traci Hurley, CFLE, CHOA']
 ];
 const TABS={
  family:[['today','Today','sun'],['calendar','Calendar','cal'],['news','Newsletters','news'],['help','Help','help']],
@@ -368,24 +353,23 @@ const listenBtn=(sel,label='Listen')=>`<button class="listen" data-a="listen" da
 const rowCard=(act,x,icon,t,d,extra='')=>`<button class="card" data-a="${act}" data-x="${x}"><span class="row"><span class="tile-ic">${I(icon)}</span><span class="grow"><span class="t" style="display:block">${t}</span>${d?`<span class="d" style="display:block">${d}</span>`:''}${extra}</span>${I('right','chev')}</span></button>`;
 function dateBox(iso){return `<span class="datebox"><small>${fmt(iso,{month:'short'})}</small><b>${fmt(iso,{day:'numeric'})}</b></span>`}
 function eventRow(e){return `<button class="card" data-a="event" data-x="${e.id}"><span class="row">${dateBox(e.start)}<span class="grow"><span class="t" style="display:block">${e.title}</span><span class="d" style="display:block">${e.end?'Nov 23 to 27':e.time}${e.place&&!e.end?', '+e.place:''}</span></span>${I('right','chev')}</span></button>`}
-function issueRow(i){return `<button class="card" data-a="issue" data-x="${i.id}"><span class="row"><span class="grow"><span class="tag">${NL[i.kind]}</span>${S.saved[i.id]?` <span class="tag">Saved</span>`:''}<span class="t" style="display:block;margin-top:5px">${i.title.replace(/^Star Report: /,'')}</span><span class="d" style="display:block">${fmt(i.date,{month:'short',day:'numeric'})}. ${i.mins} minute listen</span></span>${I('right','chev')}</span></button>`}
+function issueRow(i){return `<button class="card" data-a="issue" data-x="${i.id}"><span class="row"><span class="grow"><span class="tag">${NL[i.kind]}</span>${S.saved[i.id]?` <span class="tag">Saved</span>`:''}<span class="t" style="display:block;margin-top:5px">${i.title.replace(/^Star Report: /,'')}</span><span class="d" style="display:block">${fmt(i.date,{month:'short',day:'numeric'})}</span></span>${I('right','chev')}</span></button>`}
 
 /* ---------- Screens ---------- */
 const SCREENS={
  welcome:{title:'',html:()=>`<div class="welcome"><div class="logo">${LOGO}</div>
-  <p class="hello">Welcome. Who is using the app today?</p><p class="sub" style="margin-bottom:12px">You can change this later.</p>
-  <button class="opt" data-a="persona" data-x="family"><span class="tile-ic">${I('users')}</span><span>We are a Swift family<small>Today, calendar, newsletters, and help</small></span></button>
-  <button class="opt" data-a="persona" data-x="explore"><span class="tile-ic">${I('star')}</span><span>We are exploring Swift<small>How it works, tours, and costs</small></span></button>
-  <button class="opt" data-a="persona" data-x="supporter"><span class="tile-ic">${I('heart')}</span><span>I am an educator or supporter<small>Training, webinars, and giving</small></span></button>
-  <div class="note" style="margin-top:6px"><div class="t">Read your way</div>Make the text bigger, change the color, or have the app read to you.
-  <button class="listen" style="margin-top:10px;background:var(--card)" data-a="go" data-x="comfort"><span class="aa" style="font-size:1em">Aa</span> Reading comfort</button></div></div>`},
+  <p class="hello" style="margin-bottom:14px">Who is using the app?</p>
+  <button class="opt" data-a="persona" data-x="family"><span class="tile-ic">${I('users')}</span><span>Swift family</span></button>
+  <button class="opt" data-a="persona" data-x="explore"><span class="tile-ic">${I('star')}</span><span>Exploring Swift</span></button>
+  <button class="opt" data-a="persona" data-x="supporter"><span class="tile-ic">${I('heart')}</span><span>Educator or supporter</span></button>
+  <button class="listen" style="align-self:flex-start;margin-top:8px" data-a="go" data-x="comfort"><span class="aa" style="font-size:1em">Aa</span> Reading comfort</button></div>`},
 
  today:{title:'Today',html:()=>{
   const w=WEEK[S.day],k=KIDS.find(x=>x.id===S.kid);
   const times=w.late?[['Early drop-off','7:30 AM'],['Carpool','8:30 AM'],['Homeroom','9:00 AM'],['Dismissal','3:05 PM']]:[['Carpool opens','7:30 AM'],['Homeroom','8:00 AM'],['Dismissal','3:05 PM']];
-  let kidNote=k.id==='maya'?'Maya uses a school iPad.':'Leo brings a charged Chromebook.';
-  if(w.fri)kidNote=k.id==='maya'?'Maya can wear spirit wear. Her Friday folder comes home.':'Leo wears uniform unless he has earned an out-of-uniform day.';
-  if(w.late)kidNote='If you drop off before 8:30, park and walk '+k.name+' in.';
+  let kidNote=k.id==='maya'?'':'Bring a charged Chromebook.';
+  if(w.fri)kidNote=k.id==='maya'?'Spirit wear is fine. Friday folder comes home.':'Bring a charged Chromebook.';
+  if(w.late)kidNote='Before 8:30: park and walk in.';
   const up=EVENTS.filter(e=>e.start>TODAY&&e.cat!=='admissions').slice(0,2);
   const todos=ISSUES[0].todo;
   return `<p class="hello">Good morning, Rivera family</p><p class="sub" style="margin-bottom:12px">Thursday, November 5</p>
@@ -394,20 +378,19 @@ const SCREENS={
    <div class="week" role="group" aria-label="Choose a day">${WEEK.map((d,i)=>`<button data-a="day" data-x="${i}" aria-pressed="${i===S.day}">${d.d}<b>${d.n}</b></button>`).join('')}</div>
    <div data-r><div class="t">${w.type}</div>
    <div class="times">${times.map(t=>`<div><span>${t[0]}</span><b>${t[1]}</b></div>`).join('')}</div></div>
-   <hr>
-   <div data-r>${w.note?`<div style="margin-bottom:6px"><b>${w.note}</b></div>`:''}<div class="d">${kidNote}</div></div>
-   <div class="acts" style="margin-bottom:0">${listenBtn('#dayCard','Listen to today')}</div>
+   ${w.note||kidNote?`<hr><div data-r>${w.note?`<div><b>${w.note}</b></div>`:''}${kidNote?`<div class="d">${kidNote}</div>`:''}</div>`:''}
+   <div class="acts" style="margin-bottom:0">${listenBtn('#dayCard')}</div>
   </section>
   <div class="grid2">
-   <button class="tile" data-a="startAbs"><span class="sw bg-pink">${I('door')}</span>Absent, late, or leaving early</button>
-   <button class="tile" data-a="app" data-x="pik"><span class="sw bg-teal">${I('car')}</span>Carpool in PikMyKid</button>
-   <button class="tile" data-a="topic" data-x="lunch"><span class="sw bg-amber">${I('food')}</span>Lunch and snacks</button>
-   <button class="tile" data-a="tab" data-x="help"><span class="sw bg-sky">${I('help')}</span>Who do I ask?</button>
+   <button class="tile" data-a="startAbs"><span class="sw bg-pink">${I('door')}</span>Report absence</button>
+   <button class="tile" data-a="app" data-x="pik"><span class="sw bg-teal">${I('car')}</span>Carpool</button>
+   <button class="tile" data-a="topic" data-x="lunch"><span class="sw bg-amber">${I('food')}</span>Lunch</button>
+   <button class="tile" data-a="tab" data-x="help"><span class="sw bg-sky">${I('help')}</span>Help</button>
   </div>
   <h2 class="h">To do</h2>
   <div class="card" style="padding:6px 14px">${todos.map((t,i)=>`<button class="do" role="checkbox" aria-checked="${!!S.done[i]}" data-a="todo" data-x="${i}"><span class="box">${I('check')}</span><span>${t.t}</span></button>`).join('')}</div>
   <h2 class="h">New this week</h2>
-  ${rowCard('issue','star-1105','news','Star Report: November 5','In short, 3 things. 3 minute listen.')}
+  ${rowCard('issue','star-1105','news','Star Report: November 5','')}
   <h2 class="h">Coming up</h2>${up.map(eventRow).join('')}`}},
 
  news:{title:'Newsletters',html:()=>{
@@ -420,12 +403,11 @@ const SCREENS={
   const i=ISSUES.find(x=>x.id===p.id);
   return `<article class="reader" id="reader">
    <span class="tag">${NL[i.kind]}</span><h2 data-r>${i.title}</h2><p class="sub">${longDate(i.date)}</p>
-   <div class="acts">${listenBtn('#reader',`Listen, ${i.mins} min`)}
+   <div class="acts">${listenBtn('#reader')}
     <button class="listen" data-a="saveIssue" data-x="${i.id}" aria-pressed="${!!S.saved[i.id]}">${I('mark')}${S.saved[i.id]?'Saved':'Save'}</button></div>
    <div class="note"><div class="t" data-r>In short</div><ul class="bul">${i.short.map(s=>`<li data-r>${s}</li>`).join('')}</ul></div>
    ${i.todo.length?`<div class="note"><div class="t" data-r>Do this</div>${i.todo.map(t=>`<div data-r style="margin:5px 0">${t.t}</div>${t.ev?`<button class="listen" style="background:var(--card);margin:4px 0" data-a="ics" data-x="${t.ev}">${I('cal')}Add to my calendar</button>`:''}`).join('')}</div>`:''}
    ${i.body.map(([h,...ps])=>`<h3 data-r>${h}</h3>${ps.map(t=>`<p data-r>${t}</p>`).join('')}`).join('')}
-   <div class="note" style="margin-top:20px"><span class="d">Sample issue. Dates are from the school calendar. The wording is a placeholder. The email version stays as it is today.</span></div>
   </article>`}},
 
  calendar:{title:'Calendar',html:()=>{
@@ -446,7 +428,7 @@ const SCREENS={
   <div class="chips" role="group" aria-label="Filter events">${[['all','All'],...Object.entries(CATS)].map(([k,l])=>`<button class="chip" data-a="calCat" data-x="${k}" aria-pressed="${S.calCat===k}">${l}</button>`).join('')}</div>
   <h2 class="h" style="margin-top:6px">${S.calDay?longDate(S.calDay):'Coming up'}</h2>
   ${list.length?list.map(eventRow).join(''):`<p class="sub">Nothing on the calendar${S.calDay?' this day':''}.</p>`}
-  <div class="note"><div class="t">Every Wednesday is a late start</div>Carpool is at 8:30 AM and homeroom is at 9:00 AM.</div>`}},
+  <div class="note">Wednesdays: late start. Homeroom at 9:00 AM.</div>`}},
 
  event:{title:'Event',html:p=>{
   const e=EVENTS.find(x=>x.id===p.id);
@@ -459,7 +441,7 @@ const SCREENS={
    <div class="card" style="margin-top:10px"><button class="switch" role="switch" aria-checked="${!!S.remind[e.id]}" data-a="remind" data-x="${e.id}"><span>Remind me the day before</span><i></i></button></div>
    ${e.id==='s101'?`<button class="btn alt" data-a="startBook">Reserve a spot</button>`:''}</div>`}},
 
- help:{title:'Help',html:()=>`<div class="search">${I('search')}<input id="helpSearch" type="search" placeholder="What do you need?" aria-label="Search help" value="${esc(S.helpQ)}"></div>
+ help:{title:'Help',html:()=>`<div class="search">${I('search')}<input id="helpSearch" type="search" placeholder="Search help" aria-label="Search help" value="${esc(S.helpQ)}"></div>
   <div id="helpList">${helpList()}</div>`},
 
  topic:{title:'Help',html:p=>{
@@ -470,18 +452,16 @@ const SCREENS={
    ${t.app?`<button class="btn alt" data-a="app" data-x="${t.app}">${I('out')}Open ${APPS[t.app].name}</button>`:''}
    <button class="btn" data-a="contact" data-x="${t.contact}">${I('msg')}Contact: ${t.contact}</button></div>`}},
 
- alerts:{title:'Alerts',html:()=>`<p class="sub" style="margin-bottom:12px">Alerts are short and urgent. Longer news lives in Newsletters.</p>
-  <div class="card"><span class="tag urgent">Example alert</span><div class="t" style="margin-top:6px">School closes at 12:15 PM today</div><div class="d">This is what an urgent alert could look like. It is not real.</div></div>
-  <div class="card"><span class="tag">Reminder</span><div class="t" style="margin-top:6px">Photo retakes are tomorrow</div><div class="d">Friday, November 6</div></div>
-  <h2 class="h">What should buzz your phone?</h2>
-  <div class="card" style="padding:4px 14px">${[['urgent','Urgent school alerts'],['news','New newsletters'],['remind','Event reminders']].map(([k,l],i)=>`${i?'<hr style="margin:0">':''}<button class="switch" role="switch" aria-checked="${S.notif[k]}" data-a="notif" data-x="${k}"><span>${l}</span><i></i></button>`).join('')}</div>`},
+ alerts:{title:'Alerts',html:()=>`  <div class="card"><span class="tag urgent">Example alert</span><div class="t" style="margin-top:6px">School closes at 12:15 PM today</div></div>
+  <div class="card"><span class="tag">Reminder</span><div class="t" style="margin-top:6px">Photo retakes are tomorrow</div></div>
+  <h2 class="h">Notify me about</h2>
+  <div class="card" style="padding:4px 14px">${[['urgent','Urgent alerts'],['news','Newsletters'],['remind','Events']].map(([k,l],i)=>`${i?'<hr style="margin:0">':''}<button class="switch" role="switch" aria-checked="${S.notif[k]}" data-a="notif" data-x="${k}"><span>${l}</span><i></i></button>`).join('')}</div>`},
 
- comfort:{title:'Reading comfort',html:()=>`<div class="card" id="prev"><div class="t" data-r>Preview</div><p data-r>Success with dyslexia starts here. Change these settings until reading feels easy.</p><div class="acts" style="margin-bottom:0">${listenBtn('#prev','Try the voice')}</div></div>
+ comfort:{title:'Reading comfort',html:()=>`<div class="card" id="prev"><div class="t" data-r>Preview</div><p data-r>Success with dyslexia starts here.</p><div class="acts" style="margin-bottom:0">${listenBtn('#prev','Try the voice')}</div></div>
   <h2 class="h">Text size</h2><div class="seg" role="group" aria-label="Text size">${SIZES.map(([v,l])=>`<button data-a="pref" data-k="size" data-x="${v}" aria-pressed="${prefs.size==v}">${l}</button>`).join('')}</div>
   <h2 class="h">Background</h2><div class="seg" role="group" aria-label="Background">${[['white','White'],['cream','Cream'],['blue','Blue'],['dark','Dark']].map(([v,l])=>`<button data-a="pref" data-k="tint" data-x="${v}" aria-pressed="${prefs.tint===v}">${l}</button>`).join('')}</div>
   <h2 class="h">Voice speed</h2><div class="seg" role="group" aria-label="Voice speed">${[['slow','Slower'],['normal','Normal'],['fast','Faster']].map(([v,l])=>`<button data-a="pref" data-k="rate" data-x="${v}" aria-pressed="${prefs.rate===v}">${l}</button>`).join('')}</div>
-  <div class="card" style="padding:4px 14px"><button class="switch" role="switch" aria-checked="${prefs.wide}" data-a="wide"><span>More space between letters and lines</span><i></i></button></div>
-  ${S.persona?`<button class="btn alt" style="margin-top:8px" data-a="restart">Switch who is using the app</button>`:''}`},
+  <div class="card" style="padding:4px 14px"><button class="switch" role="switch" aria-checked="${prefs.wide}" data-a="wide"><span>Wider spacing</span><i></i></button></div>`},
 
  absence:{title:'Tell the school',html:()=>{
   const a=S.abs,bar=`<div class="steps" aria-label="Step ${a.step} of 4">${[1,2,3,4].map(i=>`<i class="${i<=a.step?'on':''}"></i>`).join('')}</div>`;
@@ -489,81 +469,75 @@ const SCREENS={
    ${KIDS.map(k=>`<button class="opt" data-a="absKid" data-x="${k.id}" aria-pressed="${a.kids.includes(k.id)}">${k.name}<small style="margin-left:auto">${k.grade}</small></button>`).join('')}
    <button class="btn" data-a="absNext" ${a.kids.length?'':'disabled'}>Next</button>`;
   if(a.step===2)return bar+`<p class="hello" style="margin-bottom:12px">What is happening?</p>
-   ${[['out','Out all day','Sick, trip, or other reason','heart'],['late','Coming in late','Use the front door intercom when you arrive','clock'],['early','Leaving early','Pickup must be before 2:30 PM','door']].map(o=>`<button class="opt" data-a="absType" data-x="${o[0]}"><span class="tile-ic">${I(o[3])}</span><span>${o[1]}<small>${o[2]}</small></span></button>`).join('')}`;
+   ${[['out','Out all day','','heart'],['late','Coming in late','','clock'],['early','Leaving early','Before 2:30 PM','door']].map(o=>`<button class="opt" data-a="absType" data-x="${o[0]}"><span class="tile-ic">${I(o[3])}</span><span>${o[1]}${o[2]?`<small>${o[2]}</small>`:''}</span></button>`).join('')}`;
   if(a.step===3)return bar+`<p class="hello" style="margin-bottom:12px">Which day?</p>
    ${[['Today','Thursday, November 5'],['Tomorrow','Friday, November 6'],['Monday','November 9']].map(o=>`<button class="opt" data-a="absDay" data-x="${o[0]}, ${o[1]}">${o[0]}<small style="margin-left:auto">${o[1]}</small></button>`).join('')}`;
   if(a.step===4){const names=a.kids.map(i=>KIDS.find(k=>k.id===i).name).join(' and ');const type={out:'Out all day',late:'Coming in late',early:'Leaving early'}[a.type];
    return bar+`<p class="hello" style="margin-bottom:12px">Does this look right?</p>
    <div class="card" id="absSum"><div data-r><b>${names}</b></div><div data-r>${type}</div><div data-r>${a.day}</div></div>
-   ${a.type==='early'?'<div class="note">Early pickup must be before 2:30 PM.</div>':''}${a.type==='late'?'<div class="note">When you arrive, use the front door intercom. The receptionist updates attendance.</div>':''}${a.type==='out'?'<div class="note">If your child is sick, the school nurse can answer questions about coming back.</div>':''}
+   ${a.type==='early'?'<div class="note">Early pickup must be before 2:30 PM.</div>':''}${a.type==='late'?'<div class="note">Use the front door intercom when you arrive.</div>':''}
    <div class="acts">${listenBtn('#absSum','Read this to me')}</div>
    <button class="btn" data-a="absSend">Send to the front desk</button>`}
-  return `<div class="ok"><span class="sw">${I('check')}</span><p class="hello">All set</p><p>The front desk would get this right away.</p><p class="d">Demo only. Nothing was sent.</p></div>
+  return `<div class="ok"><span class="sw">${I('check')}</span><p class="hello">All set</p><p class="d">Demo only. Nothing was sent.</p></div>
    <button class="btn" data-a="back">Done</button>`}},
 
  explore:{title:'Explore',html:()=>`<div class="hero" id="hero"><div class="t" data-r>Success with dyslexia starts here</div>
-   <p data-r>Swift serves students with dyslexia, language learning differences, ADHD, and executive function challenges in Roswell, Georgia.</p>
    <div class="acts" style="margin-bottom:0">${listenBtn('#hero')}</div></div>
-  <div class="grid2"><button class="tile" data-a="tab" data-x="visit"><span class="sw bg-teal">${I('pin')}</span>Visit Swift</button><button class="tile" data-a="tab" data-x="cost"><span class="sw bg-amber">${I('wallet')}</span>Tuition and aid</button></div>
+  <div class="grid2"><button class="tile" data-a="tab" data-x="visit"><span class="sw bg-teal">${I('pin')}</span>Visit</button><button class="tile" data-a="tab" data-x="cost"><span class="sw bg-amber">${I('wallet')}</span>Tuition and aid</button></div>
   <h2 class="h">What makes Swift different</h2>
-  ${rowCard('xp','og','book','Orton-Gillingham, every day','Small group literacy instruction')}
-  ${rowCard('xp','math','star','Multisensory math','For Lower and Middle Division')}
-  ${rowCard('xp','svc','users','Support under one roof','Speech, OT, counseling, and READing PAWS')}
-  <h2 class="h">Portrait of Success</h2><div class="card"><ul class="bul">${['Leverage strengths','Unlock confidence','Advocate relentlessly','Embrace responsibility','Celebrate success'].map(x=>`<li>${x}</li>`).join('')}</ul></div>
-  <h2 class="h">Not sure yet?</h2>${rowCard('tab','learn','grad','Free reading and speech screenings','For rising K to grade 3')}`},
+  ${rowCard('xp','og','book','Orton-Gillingham, every day','')}
+  ${rowCard('xp','math','star','Multisensory math','')}
+  ${rowCard('xp','svc','users','Support under one roof','')}`},
 
  xp:{title:'How Swift teaches',html:p=>{const c={
-   og:['Orton-Gillingham, every day',['Structured literacy is taught in small groups every day.','Teaching is direct and explicit, and it links spoken and written language.','Lessons use sight, sound, touch, and movement.','All Swift teachers complete the 70+ hour Associate Level course.','Two Orton-Gillingham Fellows coach teachers in the classroom.']],
-   math:['Multisensory math',['Swift teaches math with a multisensory approach in both divisions.','Math coaching and teacher workshops run through the Swift Institute.','A Multisensory Math Summer Clinic is offered too.']],
-   svc:['Support under one roof',['These services are included in tuition.','Speech and language pathologists work in-house.','Occupational therapists support motor skills.','School psychologists support well-being.','READing PAWS uses therapy animals to build literacy confidence.']]}[p.id];
+   og:['Orton-Gillingham, every day',['Small group literacy every day.','Lessons use sight, sound, touch, and movement.','All teachers complete the 70+ hour course.']],
+   math:['Multisensory math',['Taught in both divisions.','Summer clinic available.']],
+   svc:['Support under one roof',['Speech and language','Occupational therapy','Counseling','READing PAWS','Included in tuition.']]}[p.id];
   return `<div class="reader" id="xp"><h2 data-r>${c[0]}</h2><div class="acts">${listenBtn('#xp')}</div><div class="card"><ul class="bul">${c[1].map(x=>`<li data-r>${x}</li>`).join('')}</ul></div>
-  <button class="btn" data-a="tab" data-x="visit">See it for yourself</button></div>`}},
+  <button class="btn" data-a="tab" data-x="visit">Visit Swift</button></div>`}},
 
- visit:{title:'Visit',html:()=>`<div class="hero"><span class="tag">Next date</span><div class="t" style="margin-top:8px">Swift 101</div>
-   <p>Tuesday, November 17, 8:30 to 10:00 AM. Hear from the admissions team, then tour classrooms in session.</p></div>
+ visit:{title:'Visit',html:()=>`<div class="hero"><div class="t">Swift 101</div>
+   <p>Tuesday, November 17, 8:30 AM</p><p>Info session and classroom tour</p></div>
   <button class="btn" data-a="startBook">Reserve a spot</button>
   <h2 class="h">How admission works</h2>
-  <ol class="tl"><li><b>Tour and meet</b><br><span class="d">See classrooms and meet the Dean of Enrollment.</span></li>
-  <li><b>Apply</b><br><span class="d">The application comes by email. The fee is $185 and is non-refundable.</span></li>
-  <li><b>Student visit</b><br><span class="d">Your child spends a day in their current grade level.</span></li>
-  <li><b>Hear back</b><br><span class="d">Families usually hear within ten days of the visit.</span></li></ol>
-  <button class="btn alt" data-a="contact" data-x="Admissions">${I('msg')}Ask admissions a question</button>`},
+  <ol class="tl"><li><b>Tour and meet</b></li>
+  <li><b>Apply</b><br><span class="d">$185 fee</span></li>
+  <li><b>Student visit</b><br><span class="d">One day in class</span></li>
+  <li><b>Hear back</b><br><span class="d">Usually within ten days</span></li></ol>
+  <button class="btn alt" data-a="contact" data-x="Admissions">${I('msg')}Ask admissions</button>`},
 
  book:{title:'Reserve a spot',html:()=>{const b=S.book;
-  if(b.done)return `<div class="ok"><span class="sw">${I('check')}</span><p class="hello">You would be on the list</p><p>Swift 101<br>Tuesday, November 17, 8:30 AM</p><p class="d">Demo only. Nothing was sent. No spot was reserved.</p></div>
+  if(b.done)return `<div class="ok"><span class="sw">${I('check')}</span><p class="hello">You are on the list</p><p>Swift 101<br>Tuesday, November 17, 8:30 AM</p><p class="d">Demo only. No spot was reserved.</p></div>
    <button class="btn" data-a="ics" data-x="s101">${I('cal')}Add to my calendar</button><button class="btn alt" data-a="back">Done</button>`;
-  return `<p class="hello" style="margin-bottom:6px">Swift 101</p><p class="sub" style="margin-bottom:16px">Tuesday, November 17, 8:30 AM</p>
-  <h2 class="h">How many adults are coming?</h2><div class="seg">${[1,2,3].map(n=>`<button data-a="bookN" data-x="${n}" aria-pressed="${b.n===n}">${n}</button>`).join('')}</div>
-  <h2 class="h">What grade is your child in?</h2><div class="seg">${['K to 2','3 to 5','6 to 8'].map(g=>`<button data-a="bookG" data-x="${g}" aria-pressed="${b.g===g}">${g}</button>`).join('')}</div>
+  return `<p class="hello" style="margin-bottom:16px">Swift 101</p>
+  <h2 class="h">Adults coming</h2><div class="seg">${[1,2,3].map(n=>`<button data-a="bookN" data-x="${n}" aria-pressed="${b.n===n}">${n}</button>`).join('')}</div>
+  <h2 class="h">Child's grade</h2><div class="seg">${['K to 2','3 to 5','6 to 8'].map(g=>`<button data-a="bookG" data-x="${g}" aria-pressed="${b.g===g}">${g}</button>`).join('')}</div>
   <button class="btn" data-a="bookGo" ${b.g?'':'disabled'}>Reserve my spot</button>`}},
 
- cost:{title:'Cost',html:()=>`<h2 class="h">Tuition for 2026 to 2027</h2>
-  <div class="card" style="padding:4px 16px"><table><tr><td>Kindergarten to grade 2</td><td>$39,500</td></tr><tr><td>Grades 3 and 4</td><td>$42,750</td></tr><tr><td>Grades 5 to 8</td><td>$43,380</td></tr></table></div>
-  <div class="note"><b>Included in tuition:</b> lunch, speech, OT, and counseling.</div>
+ cost:{title:'Cost',html:()=>`<h2 class="h">Tuition, 2026 to 2027</h2>
+  <div class="card" style="padding:4px 16px"><table><tr><td>K to grade 2</td><td>$39,500</td></tr><tr><td>Grades 3 and 4</td><td>$42,750</td></tr><tr><td>Grades 5 to 8</td><td>$43,380</td></tr></table></div>
   <h2 class="h">Help paying</h2>
-  <div class="card"><div class="t">Tuition assistance</div><div class="d">Need-based grants, not loans. Swift awards over $520,000 each year. Apply through Clarity. The first-round deadline is February 2.</div></div>
-  <div class="card"><div class="t">SB-10 scholarship</div><div class="d">Georgia Special Needs Scholarship for students with a current IEP.</div></div>
-  <div class="card"><div class="t">529 funds</div><div class="d">Can pay qualified K to 12 costs, up to $20,000 a year starting in 2026.</div></div>
-  <div class="card"><div class="t">Payment plans</div><div class="d">Offered to all families.</div></div>`},
+  <div class="card"><div class="t">Tuition assistance</div><div class="d">Apply by February 2 for the first round.</div></div>
+  <div class="card"><div class="t">SB-10 scholarship</div><div class="d">For students with a current IEP.</div></div>
+  <div class="card"><div class="t">529 funds</div></div>
+  <div class="card"><div class="t">Payment plans</div></div>`},
 
- learn:{title:'Learn',html:()=>`<div class="hero"><div class="t">Swift Institute</div><p>Free workshops, webinars, and courses for parents and educators.</p></div>
-  <h2 class="h">For families</h2>
-  <div class="card"><span class="tag">Free</span><div class="t" style="margin-top:6px">Reading and speech screenings</div><div class="d">30 minutes, for rising K to grade 3 students not yet formally assessed. The last date was October 2, 2026.</div></div>
+ learn:{title:'Learn',html:()=>`<div class="hero"><div class="t">Swift Institute</div><p>Free workshops and webinars</p></div>
+  <div class="card"><div class="t">Reading and speech screenings</div><div class="d">Free, for rising K to grade 3.</div></div>
   <h2 class="h">Past sessions</h2>
-  ${PAST.map(p=>`<div class="card"><div class="t">${p[0]}</div><div class="d">${p[1]}</div><div class="d" style="margin-top:3px">${p[2]}</div></div>`).join('')}
+  ${PAST.map(p=>`<div class="card"><div class="t">${p[0]}</div><div class="d">${p[1]}</div></div>`).join('')}
   <h2 class="h">For educators</h2>
-  <div class="card"><div class="t">Orton-Gillingham training</div><div class="d">Classroom Educator, Associate, and Certified Level courses. Associate and Certified are OGA accredited.</div></div>
-  <div class="card"><div class="t">Multisensory math workshops</div><div class="d">Based on Marilyn Zecher's Multisensory Math Approach.</div></div>
+  <div class="card"><div class="t">Orton-Gillingham training</div></div>
+  <div class="card"><div class="t">Multisensory math workshops</div></div>
   <button class="btn alt" data-a="contact" data-x="Swift Institute">${I('msg')}Ask about a course</button>`},
 
- give:{title:'Give',html:()=>`<div class="hero" id="giveH"><div class="t" data-r>The Swift Fund</div><p data-r>It supports faculty, facilities, financial aid, technology, and programs.</p>
+ give:{title:'Give',html:()=>`<div class="hero" id="giveH"><div class="t" data-r>The Swift Fund</div><p data-r>Faculty, facilities, financial aid, technology, and programs.</p>
    <div class="acts" style="margin-bottom:0">${listenBtn('#giveH')}</div></div>
-  <button class="btn" data-a="giveOut">${I('out')}Give on the secure website</button>
-  <div class="note" style="margin-top:12px">The fund year starts July 1. Pledges are requested by December 31 and are due by June 30.</div>
+  <button class="btn" data-a="giveOut">${I('out')}Give on the website</button>
   <h2 class="h">Giving levels</h2>
   <div class="card" style="padding:4px 16px"><table>${[['Galaxy','$15,000 and up'],['Interstellar','$10,000 to $14,999'],['Celestial','$5,000 to $9,999'],['Constellation','$2,500 to $4,999'],['Meteor','$1,500 to $2,499'],['Astronomer','Up to $1,499']].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table></div>
   <h2 class="h">Georgia GOAL tax credit</h2>
-  <div class="card"><div class="d">Georgia taxpayers can direct tax dollars to Swift students. The credit is up to $2,500 for individuals and up to $5,000 for married couples filing jointly. Business limits differ.</div></div>`}
+  <div class="card"><div class="d">Up to $2,500 for individuals. Up to $5,000 for joint filers.</div></div>`}
 };
 
 /* ---------- List helpers ---------- */
@@ -574,19 +548,17 @@ function nlList(){
  if(!items.length)return `<p class="sub" style="padding:10px 2px">${S.nlKind==='saved'&&!q?'Nothing saved yet. Tap Save on any newsletter.':'No newsletters match that.'}</p>`;
  let html='',rest=items;
  const f=items[0];
- if(f.fresh&&!q){rest=items.slice(1);html+=`<section class="feat"><span class="tag new">New this week</span><div class="t">${f.title}</div><div class="d">Thursday, November 5</div><ul>${f.short.map(s=>`<li>${s}</li>`).join('')}</ul>
+ if(f.fresh&&!q){rest=items.slice(1);html+=`<section class="feat"><span class="tag new">New this week</span><div class="t">${f.title}</div><ul>${f.short.map(s=>`<li>${s}</li>`).join('')}</ul>
   <div class="btns"><button class="read" data-a="issue" data-x="${f.id}">Read</button><button class="listen" data-a="issueListen" data-x="${f.id}">${I("vol")}Listen</button></div></section>`}
  let mo='';rest.forEach(i=>{const m=fmt(i.date,{month:'long',year:'numeric'});if(m!==mo){html+=`<div class="month">${m}</div>`;mo=m}html+=issueRow(i)});
  return html;
 }
 function helpList(){
  const q=S.helpQ.trim().toLowerCase();
- const t=TOPICS.filter(x=>!q||(x.title+' '+x.kw+' '+x.d+' '+x.body.join(' ')).toLowerCase().includes(q));
- const a=Object.entries(APPS);
- return `${q?'':`<h2 class="h">School apps, one tap away</h2>${a.map(([k,v])=>`<button class="card" data-a="app" data-x="${k}"><span class="row"><span class="tile-ic">${I(v.icon)}</span><span class="grow"><span class="t" style="display:block">${v.name}</span><span class="d" style="display:block">${v.d}</span></span>${I('out','chev')}</span></button>`).join('')}<h2 class="h">Common questions</h2>`}
- ${t.length?t.map(x=>rowCard('topic',x.id,x.icon,x.title,x.d)).join(''):'<p class="sub">Nothing matches that. Try a different word, or call the school.</p>'}
- ${q?'':`<h2 class="h">Other</h2>${rowCard('tab','give','heart','Give to Swift','Swift Fund and Georgia GOAL')}${rowCard('tab','learn','book','Swift Institute','Free workshops and webinars')}`}
- <button class="btn alt" style="margin-top:8px" data-a="contact" data-x="Front desk">${I('phone')}Call the school: 678.205.4988</button>`;
+ const t=TOPICS.filter(x=>!q||(x.title+' '+x.kw+' '+x.body.join(' ')).toLowerCase().includes(q));
+ return `${t.length?t.map(x=>rowCard('topic',x.id,x.icon,x.title,'')).join(''):'<p class="sub">No match. Try another word.</p>'}
+ ${q?'':`<h2 class="h">School apps</h2>${Object.entries(APPS).map(([k,v])=>`<button class="card" data-a="app" data-x="${k}"><span class="row"><span class="tile-ic">${I(v.icon)}</span><span class="grow t">${v.name}</span>${I('out','chev')}</span></button>`).join('')}`}
+ <button class="btn alt" style="margin-top:8px" data-a="contact" data-x="Front desk">${I('phone')}Call the school</button>`;
 }
 
 /* ---------- Rendering ---------- */
@@ -596,14 +568,15 @@ function render(keep){
  const v=$('#view'),y=v.scrollTop,cur=curScreen(),sc=SCREENS[cur.s];
  const root=S.stack.length===1;
  if(cur.s==='welcome')$('#top').style.display='none';else $('#top').style.display='';
- $('#top').innerHTML=root?`<span class="logo" aria-label="Swift School">${LOGO}</span><span class="sp"></span>
+ const out=S.persona?`<button class="logout" data-a="logout">${I('logout')}Log out</button>`:'';
+ $('#top').innerHTML=root?`<button class="logo homebtn" data-a="home" aria-label="Swift School, go to home">${LOGO}</button><span class="sp"></span>
    <button class="icbtn" data-a="go" data-x="comfort" aria-label="Reading comfort"><span class="aa">Aa</span></button>
-   ${S.persona==='family'?`<button class="icbtn" data-a="go" data-x="alerts" aria-label="Alerts">${I('bell')}<span class="dot"></span></button>`:''}`
-  :`<button class="icbtn" data-a="back" aria-label="Back">${I('left')}</button><h1>${sc.title}</h1><span class="icbtn" aria-hidden="true"></span>`;
+   ${S.persona==='family'?`<button class="icbtn" data-a="go" data-x="alerts" aria-label="Alerts">${I('bell')}<span class="dot"></span></button>`:''}${out}`
+  :`<button class="icbtn" data-a="back" aria-label="Back">${I('left')}</button><h1>${sc.title}</h1>${out}`;
  v.innerHTML=sc.html(cur.p||{});
- const tabs=S.persona&&root?TABS[S.persona]:null;
+ const tabs=S.persona?TABS[S.persona]:null;
  $('#tabs').style.display=tabs?'':'none';
- if(tabs)$('#tabs').innerHTML=tabs.map(([id,l,ic])=>`<button data-a="tab" data-x="${id}" ${cur.s===id?'aria-current="page"':''}>${I(ic)}<span>${l}</span></button>`).join('');
+ if(tabs)$('#tabs').innerHTML=tabs.map(([id,l,ic])=>`<button data-a="tab" data-x="${id}" ${S.stack[0].s===id?'aria-current="page"':''}>${I(ic)}<span>${l}</span></button>`).join('');
  v.scrollTop=keep?y:(cur.y||0);
 }
 const push=(s,p)=>{curScreen().y=$('#view').scrollTop;S.stack.push({s,p});render()};
@@ -656,29 +629,20 @@ function ics(id){
 function aboutHTML(){return `
  <h2>Try these</h2>
  <ol class="tour">
-  <li><button data-a="tour" data-x="news"><b>1</b>Read or listen to the newsletter</button></li>
-  <li><button data-a="tour" data-x="absence"><b>2</b>Report an absence in four taps</button></li>
-  <li><button data-a="tour" data-x="comfort"><b>3</b>Change the reading comfort</button></li>
-  <li><button data-a="tour" data-x="wed"><b>4</b>See how the late start Wednesday changes</button></li>
-  <li><button data-a="tour" data-x="explore"><b>5</b>See it as a family exploring Swift</button></li>
+  <li><button data-a="tour" data-x="news"><b>1</b>Listen to a newsletter</button></li>
+  <li><button data-a="tour" data-x="absence"><b>2</b>Report an absence</button></li>
+  <li><button data-a="tour" data-x="comfort"><b>3</b>Change reading comfort</button></li>
+  <li><button data-a="tour" data-x="wed"><b>4</b>See a late start Wednesday</button></li>
+  <li><button data-a="tour" data-x="explore"><b>5</b>View as a new family</button></li>
  </ol>
- <h2>Questions for the school</h2>
- <ol>
-  <li>Which family headaches should an app solve first?</li>
-  <li>Who would write alerts and newsletters each week?</li>
-  <li>Should absences go to the front desk or into FACTS?</li>
-  <li>Does the FACTS or Finalsite app already meet this need?</li>
-  <li>Would the app live under the school's own store accounts?</li>
- </ol>
- <h2>What is real here</h2>
- <p>Hours, rules, event dates, tuition, and giving levels come from theswiftschool.org, checked on November 3, 2026. Please confirm them before relying on them.</p>
- <p class="fine">The Rivera family, newsletter wording, and alerts are made up. The date is fixed at November 5, 2026. Buttons do not send anything or contact anyone. This is an independent concept. It is not an official Swift School product and the school has not reviewed or endorsed it.</p>`}
+ <p class="fine">Unofficial concept, not reviewed or endorsed by Swift School. Sample family and newsletters. School details are from theswiftschool.org, November 3, 2026. Buttons send nothing.</p>`}
 
 /* ---------- Actions ---------- */
 const go=(tab)=>setRoot(tab);
 const ACT={
  persona:x=>{S.persona=x;setRoot(TABS[x][0][0])},
- restart:()=>{S.persona=null;S.stack=[{s:'welcome'}];render()},
+ logout:()=>{closeSheet();S.persona=null;S.day=3;S.kid='maya';S.nlKind='all';S.nlQ='';S.helpQ='';S.calDay=null;S.calCat='all';S.calMonth=10;S.stack=[{s:'welcome'}];render();toast('Logged out.')},
+ home:()=>setRoot(TABS[S.persona][0][0]),
  tab:x=>{const t=TABS[S.persona].some(r=>r[0]===x);if(t)setRoot(x);else push(x)},
  go:x=>push(x),
  back:()=>{S.stack.pop();render()},
@@ -713,9 +677,9 @@ const ACT={
  bookN:x=>{S.book.n=+x;render(true)},
  bookG:x=>{S.book.g=x;render(true)},
  bookGo:()=>{S.book.done=true;render()},
- app:x=>sheet(`<h2>${APPS[x].name}</h2><p>In the real app, this button opens ${APPS[x].name} straight away.</p><p class="d" style="margin-top:8px">The school already uses it, so we link to it instead of rebuilding it.</p><button class="btn" data-a="closeSheet">Got it</button>`),
- contact:x=>sheet(`<h2>Contact: ${x}</h2><p>In the real app, this calls or emails the right person.</p><p class="d" style="margin-top:8px">Demo only. Nothing happens here, and no one is contacted.</p><button class="btn" data-a="closeSheet">Got it</button>`),
- giveOut:()=>sheet(`<h2>Give on the secure website</h2><p>In the real app, this opens the school's giving page in a browser. The app itself takes no card details.</p><button class="btn" data-a="closeSheet">Got it</button>`),
+ app:x=>sheet(`<h2>${APPS[x].name}</h2><p>The real app opens ${APPS[x].name} here.</p><button class="btn" data-a="closeSheet">Got it</button>`),
+ contact:x=>sheet(`<h2>Contact: ${x}</h2><p>Demo only. No one is contacted.</p><button class="btn" data-a="closeSheet">Got it</button>`),
+ giveOut:()=>sheet(`<h2>Give on the website</h2><p>The real app opens the school's giving page here.</p><button class="btn" data-a="closeSheet">Got it</button>`),
  about:()=>sheet(`<div class="about">${aboutHTML()}</div><button class="btn" data-a="closeSheet">Close</button>`,'about'),
  closeSheet:()=>closeSheet(),
  tour:x=>{closeSheet();
